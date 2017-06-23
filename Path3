@@ -1,0 +1,53 @@
+class Path3 {
+    internal var points: [SCNVector3] = []
+    
+    convenience init() {
+        self.init(startingPoint:SCNVector3Zero)
+    }
+    
+    init(startingPoint:SCNVector3) {
+        self.points +++ startingPoint
+    }
+    
+    func continuePath(from point:SCNVector3) -> SCNNode? {
+        let lastPoint = points.last!
+        let geo = makeRect(startPoint: lastPoint, endPoint: point)
+        geo.firstMaterial!.isDoubleSided = true
+        
+        do {
+            let deltaX = abs(point.x - lastPoint.x)
+            let deltaY = abs(point.y - lastPoint.y)
+            let deltaZ = abs(point.z - lastPoint.z)
+            
+            print("\(deltaX), \(deltaY), \(deltaZ)")
+            
+            let check: Float = 0.005
+            guard [deltaX,deltaY,deltaZ] ||> check else { return nil }
+        }
+        
+        points +++ point
+        return SCNNode(geometry:geo)
+    }
+    
+    var width: Float = 0.025
+    
+    private func makeRect(startPoint:SCNVector3,endPoint:SCNVector3) -> SCNGeometry {
+        let firstPoint = SCNVector3Make(startPoint.x, startPoint.y, startPoint.z + width)
+        let secondPoint = SCNVector3Make(startPoint.x, startPoint.y, startPoint.z - width)
+        let thirdPoint = SCNVector3Make(endPoint.x, endPoint.y, endPoint.z + width)
+        let fourthPoint = SCNVector3Make(endPoint.x, endPoint.y, endPoint.z - width)
+        let points = [firstPoint,secondPoint,thirdPoint,fourthPoint]
+        
+        let indices: [UInt16] = [
+            1,0,2,
+            1,2,3,
+            ]
+        let geoSource = SCNGeometrySource(vertices: points)
+        let geoElement = SCNGeometryElement(indices: indices, primitiveType: .triangles)
+        
+        let geo = SCNGeometry(sources: [geoSource], elements: [geoElement])
+        geo.firstMaterial?.diffuse.contents = UIColor.cyan
+        return geo
+    }
+    
+}
