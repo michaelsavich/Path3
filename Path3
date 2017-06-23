@@ -1,3 +1,4 @@
+import SceneKit
 class Path3 {
     internal var points: [SCNVector3] = []
     
@@ -6,7 +7,7 @@ class Path3 {
     }
     
     init(startingPoint:SCNVector3) {
-        self.points +++ startingPoint
+        self.points.append(startingPoint)
     }
     
     func continuePath(from point:SCNVector3) -> SCNNode? {
@@ -14,18 +15,7 @@ class Path3 {
         let geo = makeRect(startPoint: lastPoint, endPoint: point)
         geo.firstMaterial!.isDoubleSided = true
         
-        do {
-            let deltaX = abs(point.x - lastPoint.x)
-            let deltaY = abs(point.y - lastPoint.y)
-            let deltaZ = abs(point.z - lastPoint.z)
-            
-            print("\(deltaX), \(deltaY), \(deltaZ)")
-            
-            let check: Float = 0.005
-            guard [deltaX,deltaY,deltaZ] ||> check else { return nil }
-        }
-        
-        points +++ point
+        points.append(point)
         return SCNNode(geometry:geo)
     }
     
