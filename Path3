@@ -20,6 +20,7 @@ class Path3 {
     }
     
     var width: Float = 0.025
+    var color = UIColor.white
     
     private func makeRect(startPoint:SCNVector3,endPoint:SCNVector3) -> SCNGeometry {
         let firstPoint = SCNVector3Make(startPoint.x, startPoint.y, startPoint.z + width)
@@ -36,7 +37,7 @@ class Path3 {
         let geoElement = SCNGeometryElement(indices: indices, primitiveType: .triangles)
         
         let geo = SCNGeometry(sources: [geoSource], elements: [geoElement])
-        geo.firstMaterial?.diffuse.contents = UIColor.cyan
+        geo.firstMaterial?.diffuse.contents = self.color
         return geo
     }
     
