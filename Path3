@@ -1,16 +1,16 @@
 import SceneKit
-class Path3 {
+public class Path3 {
     internal var points: [SCNVector3] = []
     
-    convenience init() {
+    public convenience init() {
         self.init(startingPoint:SCNVector3Zero)
     }
     
-    init(startingPoint:SCNVector3) {
+    public init(startingPoint:SCNVector3) {
         self.points.append(startingPoint)
     }
     
-    func continuePath(from point:SCNVector3) -> SCNNode? {
+    public func continuePath(from point:SCNVector3) -> SCNNode? {
         let lastPoint = points.last!
         let geo = makeRect(startPoint: lastPoint, endPoint: point)
         geo.firstMaterial!.isDoubleSided = true
@@ -19,8 +19,8 @@ class Path3 {
         return SCNNode(geometry:geo)
     }
     
-    var width: Float = 0.025
-    var color = UIColor.white
+    public var width: Float = 0.025
+    public var color = UIColor.white
     
     private func makeRect(startPoint:SCNVector3,endPoint:SCNVector3) -> SCNGeometry {
         let firstPoint = SCNVector3Make(startPoint.x, startPoint.y, startPoint.z + width)
