@@ -1,4 +1,8 @@
 import SceneKit
+
+infix operator =?: AssignmentPrecedence //assign only if nonnil
+func =?<T>(lhs:inout T,rhs:T?) { lhs = (rhs ?? lhs) }
+
 public class Path3 {
     internal var points: [SCNVector3] = []
     
@@ -19,8 +23,20 @@ public class Path3 {
         return SCNNode(geometry:geo)
     }
     
-    public var width: Float = 0.025
-    public var color = UIColor.white
+    public static func path(points: [SCNVector3], color: CGColor?, width: CGFloat?) -> [SCNNode] {
+        let path = Path3(startingPoint: points[0])
+        path.color =? color
+        path.width =? width
+        var restOfPoints = points; restOfPoints.removeFirst();
+        var results: [SCNNode] = []
+        for point in restOfPoints {
+            results.append(path.continuePath(from: point)!)
+        }
+        return results
+    }
+    
+    public var width: CGFloat = 0.025
+    public var color = CGColor.white
     
     private func makeRect(startPoint:SCNVector3,endPoint:SCNVector3) -> SCNGeometry {
         let firstPoint = SCNVector3Make(startPoint.x, startPoint.y, startPoint.z + width)
